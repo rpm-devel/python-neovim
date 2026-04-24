@@ -5,15 +5,8 @@
 %global desc Implements support for python plugins in Nvim. Also works as a library for\
 connecting to and scripting Nvim processes through its msgpack-rpc API.
 
-# EPEL7 Sphinx is too old, disable doc building by default
-%if 0%{?el7}
-%bcond_with sphinx
-%else
-%bcond_without sphinx
-%endif
-
 Name:           python-neovim
-Version:        0.4.3
+Version:        0.6.0
 Release:        1%{?dist}
 
 License:        ASL 2.0
@@ -21,50 +14,28 @@ Summary:        Python client to Neovim
 URL:            https://github.com/neovim/pynvim
 Source0:        https://github.com/neovim/pynvim/archive/%{version}/pynvim-%{version}.tar.gz
 
-BuildArch:      noarch
 BuildRequires: make
 BuildRequires:  python%{python3_pkgversion}-devel
 BuildRequires:  python%{python3_pkgversion}-setuptools
 BuildRequires:  python%{python3_pkgversion}-pytest-runner
-
-%if 0%{?el7}
-BuildRequires:  python-devel
-BuildRequires:  python-setuptools
-%endif
-
-%if %{with sphinx}
 BuildRequires:  python%{python3_pkgversion}-sphinx
 BuildRequires:  python%{python3_pkgversion}-sphinx_rtd_theme
-%endif
 
 %description
 %{desc}
 
-%if 0%{?el7}
-%package -n python2-neovim
+%package -n python3-neovim
 Summary:        %{summary}
-%{?python_provide:%python_provide python2-neovim}
-Requires:       neovim
-Requires:       python-greenlet
-Requires:       python-trollius
-
-%description -n python2-neovim
-%{desc}
-%endif
-
-%package -n python%{python3_pkgversion}-neovim
-Summary:        %{summary}
-%{?python_provide:%python_provide python%{python3_pkgversion}-neovim}
+%{?python_provide:%python_provide python3-neovim}
 Requires:       neovim
 %if %{undefined __pythondist_requires}
 Requires:       python%{python3_pkgversion}-greenlet
 Requires:       python%{python3_pkgversion}-msgpack
 %endif
 
-%description -n python%{python3_pkgversion}-neovim
+%description -n python3-neovim
 %{desc}
 
-%if %{with sphinx}
 %package doc
 Summary:        Documentation for %{name}
 
@@ -72,49 +43,37 @@ Summary:        Documentation for %{name}
 %{desc}
 
 This package contains documentation in HTML format.
-%endif
 
 %prep
 %autosetup -n pynvim-%{version}
 
 %build
-%if 0%{?el7}
-%py2_build
-%endif
 %py3_build
 
-%if %{with sphinx}
 pushd docs
 make html
 rm -f _build/html/.buildinfo
 popd
-%endif
 
 %install
-%if 0%{?el7}
-%py2_install
-%endif
 %py3_install
 
-%if 0%{?el7}
-%files -n python2-neovim
-%license LICENSE
-%doc README.md
-%{python2_sitelib}/*
-%endif
-
-%files -n python%{python3_pkgversion}-neovim
+%files -n python3-neovim
 %license LICENSE
 %doc README.md
 %{python3_sitelib}/*
 
-%if %{with sphinx}
 %files doc
 %license LICENSE
 %doc docs/_build/html
-%endif
 
 %changelog
+* Fri Apr 24 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 0.6.0-1
+- Update to 0.6.0
+
+* Fri Apr 24 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 0.4.3-2
+- Modernize for AlmaLinux 10: python3 only, remove obsolete spec constructs
+
 * Mon Apr 19 2021 Andreas Schneider <asn@redhat.com> - 0.4.3-1
 - resolves: #1773192 - Update to version 0.4.3
   o https://github.com/neovim/pynvim/releases/tag/0.4.3
