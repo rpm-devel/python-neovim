@@ -9,9 +9,10 @@ Name:           python-neovim
 Version:        0.6.0
 Release:        1%{?dist}
 
-License:        ASL 2.0
+License:        Apache-2.0
 Summary:        Python client to Neovim
 URL:            https://github.com/neovim/pynvim
+ExclusiveArch:  x86_64 aarch64
 Source0:        https://github.com/neovim/pynvim/archive/%{version}/pynvim-%{version}.tar.gz
 
 BuildRequires: make
@@ -45,7 +46,7 @@ Summary:        Documentation for %{name}
 This package contains documentation in HTML format.
 
 %prep
-%autosetup -n pynvim-%{version}
+%autosetup -p1 -n pynvim-%{version}
 
 %build
 %py3_build
@@ -68,6 +69,9 @@ popd
 %doc docs/_build/html
 
 %changelog
+* Thu Jul 03 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 0.6.0-1
+- SPDX: ASL 2.0 -> Apache-2.0; add ExclusiveArch: x86_64 aarch64; %%autosetup -p1
+
 * Fri Apr 24 2026 CasjaysDev <rpm-devel@casjaysdev.pro> - 0.6.0-1
 - Update to 0.6.0
 
